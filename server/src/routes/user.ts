@@ -21,7 +21,8 @@ router.put('/profile', authenticateToken, async (req: AuthRequest, res) => {
       avatar: user.avatar,
       qqEmail: user.qqEmail,
       enableEmailNotify: user.enableEmailNotify,
-      registerDate: user.registerDate
+      registerDate: user.registerDate,
+      role: user.role
     });
   } catch (error) {
     console.error(error);

@@ -249,6 +249,22 @@ export const apiService = {
     }
   },
 
+  updateMemo: async (id: string, content: string): Promise<Memo> => {
+    const { isMock } = getConfig();
+    if (isMock) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      const memo = MOCK_MEMOS.find(m => m.id === id);
+      if (memo) {
+         memo.content = content;
+         return { ...memo };
+      }
+      throw new Error('Memo not found');
+    } else {
+      const response = await apiClient.put<Memo>(`/memos/${id}`, { content });
+      return response.data;
+    }
+  },
+
   toggleMemo: async (id: string): Promise<Memo> => {
     const { isMock } = getConfig();
     if (isMock) {
@@ -273,6 +289,19 @@ export const apiService = {
       if (index > -1) MOCK_MEMOS.splice(index, 1);
     } else {
       await apiClient.delete(`/memos/${id}`);
+    }
+  },
+
+  batchDeleteMemos: async (ids: string[]): Promise<void> => {
+    const { isMock } = getConfig();
+    if (isMock) {
+      await new Promise(resolve => setTimeout(resolve, 500));
+      ids.forEach(id => {
+        const index = MOCK_MEMOS.findIndex(m => m.id === id);
+        if (index > -1) MOCK_MEMOS.splice(index, 1);
+      });
+    } else {
+      await apiClient.post('/memos/batch-delete', { ids });
     }
   },
 

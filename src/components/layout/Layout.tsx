@@ -18,14 +18,18 @@ export const Layout = () => {
   const navItems = [
     { href: '/', label: '主页', icon: LayoutDashboard },
     { href: '/calendar', label: '食品日历', icon: CalendarDays },
-    { href: '/profile', label: '个人中心', icon: UserCircle },
     { href: '/memo', label: '备忘录', icon: StickyNote },
+    { href: '/profile', label: '个人中心', icon: UserCircle },
     { href: '/settings', label: '设置', icon: Settings },
   ];
 
   // Add Admin Link if user is admin
   if (user?.role === 'admin') {
-    navItems.splice(3, 0, { href: '/admin', label: '系统管理', icon: Shield });
+    // Insert before Profile
+    const profileIndex = navItems.findIndex(item => item.href === '/profile');
+    if (profileIndex > -1) {
+      navItems.splice(profileIndex, 0, { href: '/admin', label: '系统管理', icon: Shield });
+    }
   }
 
   return (
